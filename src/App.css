@@ -1,0 +1,42 @@
+#root {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+.container {
+  width: 600px;
+}
+
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  .error-button {
+    width: 20%;
+    height: 40px;
+    padding: 5px;
+    background: #f44336;
+  }
+}
+
+.error-message {
+  background: #ffffff;
+  color: #f44336;
+  border-radius: 5px;
+  height: 50px;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  width: 75%;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 10px;
+}
