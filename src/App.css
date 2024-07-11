@@ -40,3 +40,9 @@
   border-radius: 5px;
   padding: 10px;
 }
+.loader {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,9 +1,3 @@
-export interface AppState {
-  savedSearch: string;
-  results: Result[];
-  error: Error | null;
-}
-
 export interface ResultsProps {
   results: Result[];
 }
@@ -16,8 +10,4 @@ export interface Result {
 
 export interface SearchProps {
   onSearch: (savedSearch: string) => void;
-}
-
-export interface SearchState {
-  savedSearch: string;
 }
