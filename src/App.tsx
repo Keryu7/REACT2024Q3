@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Search from './components/Search/search.tsx';
 import Results from './components/Results/results.tsx';
@@ -14,11 +14,7 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect((): void => {
-    fetchResults();
-  }, [savedSearch]);
-
-  const fetchResults = async (): Promise<void> => {
+  const fetchResults = useCallback(async (): Promise<void> => {
     const cleanedSavedSearch: string = savedSearch.trim();
     const query: string = cleanedSavedSearch ? cleanedSavedSearch : '';
 
@@ -31,7 +27,11 @@ const App: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [savedSearch]);
+
+  useEffect((): void => {
+    fetchResults();
+  }, [fetchResults]);
 
   const handleSearch = (newSavedSearch: string): void => {
     localStorage.setItem('savedSearch', newSavedSearch);
