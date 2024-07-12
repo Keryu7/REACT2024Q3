@@ -1,7 +1,6 @@
 import { Result } from '../types';
 
 export const getStarships = async (query: string, page: number): Promise<{ results: Result[], total_pages: number }> => {
-  console.log('VALUE', page)
   const fetchResults = await fetch(`https://swapi.dev/api/starships/?search=${query}&page=${page}`);
   const response = await fetchResults.json();
   return {

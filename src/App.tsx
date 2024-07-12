@@ -37,12 +37,15 @@ const Main: React.FC = () => {
   }, [savedSearch]);
 
   useEffect((): void => {
+    console.log('VALUE_1', )
     const params = new URLSearchParams(location.search);
     const page = params.get('page');
     setCurrentPage(page ? parseInt(page, 10) : 1);
   }, [location.search]);
 
   useEffect((): void => {
+    console.log('VALUE_2', )
+
     if (currentPage) {
       fetchResults(currentPage);
     }
