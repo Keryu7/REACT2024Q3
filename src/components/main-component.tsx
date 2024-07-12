@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Outlet } from 'react-router-dom';
 import Search from './Search/search.tsx';
 import Results from './Results/results.tsx';
 import ErrorBoundary from './ErrorBoundary/errorBoundary.tsx';
@@ -9,13 +9,14 @@ import { getStarships } from '../services/apiService.tsx';
 import '../App.css';
 
 const getInitialPage = (): number => {
-    const params: URLSearchParams = new URLSearchParams(location.search);
+    const params: URLSearchParams = new URLSearchParams(window.location.search);
     const page: string | null = params.get('page');
     return page ? parseInt(page, 10) : 1;
 }
 
 const MainComponent: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const [savedSearch, setSavedSearch] = useState<string>(localStorage.getItem('savedSearch') || '');
     const [results, setResults] = useState<Result[]>([]);
@@ -23,8 +24,7 @@ const MainComponent: React.FC = () => {
     const [error, setError] = useState<Error | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(getInitialPage());
     const [totalPages, setTotalPages] = useState<number>(1);
-
-    const navigate = useNavigate();
+    const [selectedDetail, setSelectedDetail] = useState<number | null>(null);
 
     const fetchResults = useCallback(async (page: number): Promise<void> => {
         const cleanedSavedSearch: string = savedSearch.trim();
@@ -46,15 +46,16 @@ const MainComponent: React.FC = () => {
     }, [savedSearch, navigate]);
 
     useEffect((): void => {
-        console.log('VALUE_1', )
         const params = new URLSearchParams(location.search);
         const page = params.get('page');
+        const details = params.get('details');
         setCurrentPage(page ? parseInt(page, 10) : 1);
+        setSelectedDetail(details ? parseInt(details, 10) : null);
     }, [location.search]);
 
     useEffect((): void => {
         fetchResults(currentPage);
-    }, [currentPage,fetchResults]);
+    }, [currentPage, fetchResults]);
 
     const handleSearch = (newSavedSearch: string): void => {
         localStorage.setItem('savedSearch', newSavedSearch);
@@ -66,6 +67,17 @@ const MainComponent: React.FC = () => {
     const handlePageChange = (newPage: number): void => {
         setCurrentPage(newPage);
         navigate(`/?page=${newPage}`);
+    };
+
+    const handleItemClick = (id: number): void => {
+        console.log('VALUE_clicjk', )
+        setSelectedDetail(id);
+        navigate(`/details/${id}/?page=${currentPage}`);
+    };
+
+    const handleCloseDetail = (): void => {
+        setSelectedDetail(null);
+        navigate(`/?page=${currentPage}`);
     };
 
     const handleError = (): void => {
@@ -89,24 +101,32 @@ const MainComponent: React.FC = () => {
 
     return (
         <ErrorBoundary>
-            <div className="container">
-                <div className="search-container">
-                    <div className="search">
-                        <Search onSearch={handleSearch} />
+            <div className={`container ${selectedDetail ? 'container-split' : ''}`}>
+                <div className={`left-section ${selectedDetail ? 'with-details' : ''}`}>
+                    <div className="search-container">
+                        <div className="search">
+                            <Search onSearch={handleSearch} />
+                        </div>
+                        <button className="error-button" onClick={handleError}>
+                            Throw Error
+                        </button>
                     </div>
-                    <button className="error-button" onClick={handleError}>
-                        Throw Error
-                    </button>
+                    <div className="results">
+                        {loading ? (<div className="loader">Loading...</div>) : (<Results results={results} onItemClick={handleItemClick} />)}
+                    </div>
+                    {!loading && results?.length > 0 && (
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    )}
                 </div>
-                <div className="results">
-                    {loading ? (<div className="loader">Loading...</div>) : (<Results results={results} />)}
-                </div>
-                {!loading && results?.length > 0 && (
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                    />
+                {selectedDetail && (
+                    <div className="right-section">
+                        <button onClick={handleCloseDetail}>Close</button>
+                        <Outlet />
+                    </div>
                 )}
             </div>
         </ErrorBoundary>

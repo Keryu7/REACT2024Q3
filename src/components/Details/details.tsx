@@ -27,10 +27,6 @@ const Details: React.FC = () => {
         fetchDetails();
     }, [id]);
 
-    const closeDetails = () => {
-        window.history.pushState({}, '', '/');
-    };
-
     if (error) {
         return <div className="error-message">Error: {error.message}</div>;
     }
@@ -42,7 +38,6 @@ const Details: React.FC = () => {
             ) : (
                 details && (
                     <div className="details">
-                        <button onClick={closeDetails}>Close</button>
                         <h2>{details.name}</h2>
                         <p><strong>Model:</strong> {details.model}</p>
                         <p><strong>Manufacturer:</strong> {details.manufacturer}</p>

@@ -1,5 +1,6 @@
 export interface ResultsProps {
   results: Result[];
+  onItemClick: (id: number) => void;
 }
 
 export interface Result {

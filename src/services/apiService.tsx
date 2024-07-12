@@ -13,5 +13,5 @@ export const getStarships = async (query: string, page: number): Promise<{ resul
 export const getStarshipDetails = async (id: string | undefined): Promise<Result> => {
   const fetchResults: Response = await fetch(`https://swapi.dev/api/starships/${id}/`);
   const response = await fetchResults.json();
-  return response.results;
+  return response;
 };
