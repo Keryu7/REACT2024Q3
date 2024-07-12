@@ -22,3 +22,9 @@ export interface Result {
 export interface SearchProps {
   onSearch: (savedSearch: string) => void;
 }
+
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
