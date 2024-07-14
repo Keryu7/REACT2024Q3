@@ -47,9 +47,8 @@ const MainComponent: React.FC = () => {
 
     useEffect((): void => {
         const params = new URLSearchParams(location.search);
-        const page = params.get('page');
         const details = params.get('details');
-        setCurrentPage(page ? parseInt(page, 10) : 1);
+        setCurrentPage(getInitialPage());
         setSelectedDetail(details ? parseInt(details, 10) : null);
     }, [location.search]);
 
